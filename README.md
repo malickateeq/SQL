@@ -328,3 +328,166 @@ FROM Customers
 LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID
 ORDER BY Customers.CustomerName;
 ```
+
+### SQL RIGHT JOIN Keyword
+- The RIGHT JOIN keyword returns all records from the right table (table2), and the matched records from the left table (table1). The result is NULL from the left side, when there is no match.
+
+```sql
+SELECT column_name(s)
+FROM table1
+RIGHT JOIN table2
+ON table1.column_name = table2.column_name;
+
+SELECT Orders.OrderID, Employees.LastName, Employees.FirstName
+FROM Orders
+RIGHT JOIN Employees ON Orders.EmployeeID = Employees.EmployeeID
+ORDER BY Orders.OrderID;
+```
+
+### SQL FULL OUTER JOIN Keyword
+- The FULL OUTER JOIN keyword returns all records when there is a match in left (table1) or right (table2) table records.
+
+```sql
+SELECT column_name(s)
+FROM table1
+FULL OUTER JOIN table2
+ON table1.column_name = table2.column_name
+WHERE condition;
+
+SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+FULL OUTER JOIN Orders ON Customers.CustomerID=Orders.CustomerID
+ORDER BY Customers.CustomerName;
+```
+
+### SQL Self JOIN
+- A self JOIN is a regular join, but the table is joined with itself.
+```sql
+SELECT column_name(s)
+FROM table1 T1, table1 T2
+WHERE condition;
+
+-- The following SQL statement matches customers that are from the same city:
+SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A, Customers B
+WHERE A.CustomerID <> B.CustomerID
+AND A.City = B.City
+ORDER BY A.City;
+```
+
+### The SQL UNION Operator
+- The UNION operator is used to combine the result-set of two or more SELECT statements.
+    * Each SELECT statement within UNION must have the same number of columns
+    * The columns must also have similar data types
+    * The columns in each SELECT statement must also be in the same order
+
+```sql
+SELECT column_name(s) FROM table1
+UNION
+SELECT column_name(s) FROM table2;
+
+SELECT City FROM Customers
+UNION   -- use UNION ALL to allow DISTINCT values
+SELECT City FROM Suppliers
+ORDER BY City;
+```
+
+## The SQL GROUP BY Statement
+- The GROUP BY statement groups rows that have the same values into summary rows, like "find the number of customers in each country".
+
+- The GROUP BY statement is often used with aggregate functions (COUNT, MAX, MIN, SUM, AVG) to group the result-set by one or more columns.
+
+```sql
+SELECT column_name(s)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+ORDER BY column_name(s);
+```
+
+## The SQL HAVING Clause
+- The HAVING clause was added to SQL because the WHERE keyword could not be used with aggregate functions.
+- To put condition on Aggregate functions.
+```sql
+SELECT column_name(s)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+HAVING condition
+ORDER BY column_name(s);
+
+SELECT COUNT(CustomerID), Country
+FROM Customers
+GROUP BY Country
+HAVING COUNT(CustomerID) > 5;
+```
+
+## The SQL EXISTS Operator
+- The EXISTS operator is used to test for the existence of any record in a subquery.
+- The EXISTS operator returns true if the subquery returns one or more records.
+```sql
+SELECT column_name(s)
+FROM table_name
+WHERE EXISTS
+(SELECT column_name FROM table_name WHERE condition);
+
+SELECT SupplierName
+FROM Suppliers
+WHERE EXISTS (SELECT ProductName FROM Products WHERE Products.SupplierID = Suppliers.supplierID AND Price < 20);
+```
+
+## The SQL ANY and ALL Operators
+- The ANY and ALL operators are used with a WHERE or HAVING clause.
+- The ANY operator returns true if any of the subquery values meet the condition.
+- The ALL operator returns true if all of the subquery values meet the condition.
+```sql
+SELECT column_name(s)
+FROM table_name
+WHERE column_name operator ANY
+(SELECT column_name FROM table_name WHERE condition);
+
+SELECT ProductName
+FROM Products
+WHERE ProductID = ANY (SELECT ProductID FROM OrderDetails WHERE Quantity = 10);
+```
+
+# SQL Database
+
+## The SQL CREATE DATABASE Statement
+```sql
+-- Create a new database
+CREATE DATABASE databasename;
+
+-- DROP/Delete Database
+DROP DATABASE databasename;
+
+-- BackUp Database
+BACKUP DATABASE databasename
+TO DISK = 'filepath';
+
+-- Create Tabel
+CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    column3 datatype,
+   ....
+);
+
+CREATE TABLE Persons (
+    PersonID int,
+    LastName varchar(255),
+    FirstName varchar(255),
+    Address varchar(255),
+    City varchar(255)
+)
+
+-- Drop/Delete Table
+DROP TABLE table_name;
+
+-- Alter Table
+ALTER TABLE table_name
+ADD column_name datatype;
+
+ALTER TABLE Customers
+ADD Email varchar(255);
+```
